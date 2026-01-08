@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="com.homey.vendor"
+        version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <name>Homey Vendor</name>
+    <description>Homey Vendor Mobile App</description>
+    <author email="dev@homey.in">Homey Team</author>
+
+    <!-- App URL -->
+    <content src="https://ehomey.in/admin/" />
+
+    <!-- Navigation -->
+    <allow-navigation href="https://ehomey.in/*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <!-- Preferences -->
+    <preference name="AndroidPersistentFileLocation" value="Internal" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+
+    <!-- App Icon -->
+    <icon src="logo.png" />
+
+    <!-- Android specific -->
+    <platform name="android">
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        <uses-permission android:name="android.permission.VIBRATE" />
+    </platform>
+
+</widget>

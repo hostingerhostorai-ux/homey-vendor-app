@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Homey Vendor</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script src="cordova.js"></script>
+    <script>
+        document.addEventListener('deviceready', function () {
+
+            // Status bar
+            if (window.StatusBar) {
+                StatusBar.styleDefault();
+                StatusBar.hide();
+            }
+
+            // Back button handling
+            document.addEventListener("backbutton", function (e) {
+                e.preventDefault();
+                if (confirm("Exit Homey Vendor App?")) {
+                    navigator.app.exitApp();
+                }
+            }, false);
+
+            // Open external links in browser
+            document.addEventListener('click', function (e) {
+                let target = e.target;
+                if (target.tagName === 'A' && target.href.startsWith('http')) {
+                    e.preventDefault();
+                    cordova.InAppBrowser.open(target.href, '_system');
+                }
+            });
+
+        }, false);
+    </script>
+</head>
+
+<body style="margin:0;padding:0;overflow:hidden;">
+    <iframe
+        src="https://ehomey.in/admin/"
+        style="border:0;width:100vw;height:100vh;"
+        allowfullscreen>
+    </iframe>
+    <script src="js/fcm.js"></script>
+</body>
+</html>
