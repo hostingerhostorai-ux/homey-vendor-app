@@ -20,26 +20,35 @@ jobs:
         with:
           node-version: 18
 
-      # 3️⃣ Java 17 (ONLY)
+      # 3️⃣ Java 17 (MANDATORY)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ Cordova
+      # 4️⃣ ⛔ REMOVE SYSTEM GRADLE & INSTALL GRADLE 7.6.4
+      - name: Install Gradle 7.6.4
+        run: |
+          wget https://services.gradle.org/distributions/gradle-7.6.4-bin.zip
+          unzip gradle-7.6.4-bin.zip
+          sudo mv gradle-7.6.4 /opt/gradle
+          echo "/opt/gradle/bin" >> $GITHUB_PATH
+          gradle -v
+
+      # 5️⃣ Cordova
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 5️⃣ Project dependencies
+      # 6️⃣ Dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform (STABLE)
+      # 7️⃣ Android platform (COMPATIBLE)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
-      # 7️⃣ Firebase config
+      # 8️⃣ Firebase config
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -47,16 +56,15 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ Prepare Android
+      # 9️⃣ Prepare Android
       - name: Prepare Android
         run: cordova prepare android
 
-      # 9️⃣ Build APK (IMPORTANT FLAGS)
+      # 🔟 Build APK (NOW IT WILL USE GRADLE 7.6.4)
       - name: Build APK
-        run: |
-          cordova build android --debug --no-interactive
+        run: cordova build android --debug --no-interactive
 
-      # 🔟 Upload APK
+      # 1️⃣1️⃣ Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
