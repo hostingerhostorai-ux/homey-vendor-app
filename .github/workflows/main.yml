@@ -29,6 +29,13 @@ jobs:
         with:
           api-level: 32
           build-tools: 32.0.0
+          
+        # 🔧 Force compatible Gradle (disable system Gradle 9)
+      - name: Force Gradle 7.x for Cordova
+        run: |
+          echo "GRADLE_HOME=" >> $GITHUB_ENV
+          echo "PATH=$(echo $PATH | sed 's#/usr/share/gradle-9.2.1/bin:##g')" >> $GITHUB_ENV
+
 
       # 5️⃣ Cordova
       - name: Install Cordova
