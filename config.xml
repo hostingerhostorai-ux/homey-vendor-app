@@ -12,6 +12,7 @@
     <content src="https://ehomey.in/admin/" />
 
     <!-- Navigation -->
+    <access origin="*"/>    
     <allow-navigation href="https://ehomey.in/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
