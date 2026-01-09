@@ -10,31 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Repo checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # 3️⃣ Java (Android requires)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 4️⃣ Cordova install
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      # 5️⃣ NPM dependencies
+      - name: Install dependencies
+        run: npm install
 
+      # 6️⃣ Add Android platform (platforms/ auto create hoga)
       - name: Add Android Platform
-        run: |
-          cordova platform add android
+        run: cordova platform add android
 
+      # 7️⃣ 🔥 GOOGLE SERVICES JSON (FROM GITHUB SECRET)
+      - name: Create google-services.json
+        run: |
+          mkdir -p platforms/android/app
+          echo "$GOOGLE_SERVICES_JSON" > platforms/android/app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      # 8️⃣ Build Debug APK
       - name: Build APK
-        run: |
-          cordova build android
+        run: cordova build android
 
+      # 9️⃣ Upload APK as artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
