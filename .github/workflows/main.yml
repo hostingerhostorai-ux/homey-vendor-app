@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+    - name: Force Gradle 7.6.4
+    run: |
+      cd platforms/android
+      sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' gradle/wrapper/gradle-wrapper.properties
+
+
       # 2️⃣ Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
