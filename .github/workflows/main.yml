@@ -45,12 +45,7 @@ jobs:
       - name: Prepare Android
         run: cordova prepare android
 
-      # 🔧 FIX: Create Gradle Wrapper (NOW gradlew exists)
-      - name: Create Gradle Wrapper
-        run: |
-          cd platforms/android
-          chmod +x gradlew
-          ./gradlew wrapper
+     
 
 
       # 8️⃣ Firebase config
