@@ -36,17 +36,22 @@ jobs:
       # 6️⃣ Dependencies
       - run: npm install
 
-      # 7️⃣ Android Platform (STABLE)
+           # 7️⃣ Android Platform (STABLE)
       - run: |
           cordova platform rm android || true
           cordova platform add android@11.0.0
 
-    # 🔧 FIX: Create Gradle Wrapper (ONLY FIX – DO NOT REMOVE ANYTHING ELSE)
+      # 8️⃣ Prepare Android (REQUIRED)
+      - name: Prepare Android
+        run: cordova prepare android
+
+      # 🔧 FIX: Create Gradle Wrapper (NOW gradlew exists)
       - name: Create Gradle Wrapper
         run: |
           cd platforms/android
           chmod +x gradlew
           ./gradlew wrapper
+
 
       # 8️⃣ Firebase config
       - run: |
