@@ -9,21 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL: https://services.gradle.org/distributions/gradle-7.6.4-all.zip
-
     steps:
       # 1️⃣ Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Node.js
+      # 2️⃣ Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3️⃣ Java 17 ONLY
+      # 3️⃣ Java 17
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -38,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Android platform
+      # 6️⃣ Add Android platform
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
@@ -50,18 +47,23 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ FORCE Gradle 7.6.4 Wrapper (CRITICAL STEP)
+      # 8️⃣ PREPARE ANDROID (VERY IMPORTANT)
+      - name: Prepare Android
+        run: cordova prepare android
+
+      # 9️⃣ FORCE Gradle 7.6.4 (SAFE)
       - name: Force Gradle 7.6.4
         run: |
           cd platforms/android
+          chmod +x gradlew
           ./gradlew wrapper --gradle-version 7.6.4 --distribution-type all
           ./gradlew --version
 
-      # 9️⃣ Build APK (USES ./gradlew)
+      # 🔟 Build APK
       - name: Build APK
         run: cordova build android --debug --no-interactive
 
-      # 🔟 Upload APK
+      # 1️⃣1️⃣ Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
