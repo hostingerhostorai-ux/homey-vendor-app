@@ -14,20 +14,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
+      # 2️⃣ Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3️⃣ Setup Java 17 (MANDATORY)
+      # 3️⃣ Java 17 (Cordova compatible)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ Setup Android SDK (official)
+      # 4️⃣ ANDROID SDK + BUILD TOOLS (🔥 MUST BE BEFORE CORDOVA)
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
@@ -35,28 +35,19 @@ jobs:
           build-tools: 32.0.0
           cmdline-tools: latest
 
-      # 5️⃣ Install Gradle 7.6.4 (REQUIRED)
-      - name: Install Gradle 7.6.4
-        run: |
-          wget https://services.gradle.org/distributions/gradle-7.6.4-bin.zip
-          unzip gradle-7.6.4-bin.zip
-          sudo mv gradle-7.6.4 /opt/gradle
-          echo "/opt/gradle/bin" >> $GITHUB_PATH
-          gradle -v
-
-      # 6️⃣ Install Cordova
+      # 5️⃣ Install Cordova (stable)
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 7️⃣ Install project dependencies
+      # 6️⃣ Install npm dependencies
       - name: Install dependencies
         run: npm install
 
-      # 8️⃣ Add Android Platform (COMPATIBLE)
+      # 7️⃣ Add Android platform (AFTER SDK READY)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
-      # 9️⃣ Firebase config
+      # 8️⃣ Firebase config
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -64,15 +55,15 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 🔟 Prepare Android
+      # 9️⃣ Prepare Android
       - name: Prepare Android
         run: cordova prepare android
 
-      # 1️⃣1️⃣ Build APK (Gradle 7.6.4)
+      # 🔟 Build Debug APK
       - name: Build APK
-        run: cordova build android --debug --no-interactive
+        run: cordova build android --debug
 
-      # 1️⃣2️⃣ Upload APK
+      # 1️⃣1️⃣ Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
