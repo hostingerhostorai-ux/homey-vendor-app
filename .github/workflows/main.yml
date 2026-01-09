@@ -41,6 +41,13 @@ jobs:
           cordova platform rm android || true
           cordova platform add android@11.0.0
 
+    # 🔧 FIX: Create Gradle Wrapper (ONLY FIX – DO NOT REMOVE ANYTHING ELSE)
+      - name: Create Gradle Wrapper
+        run: |
+          cd platforms/android
+          chmod +x gradlew
+          ./gradlew wrapper
+
       # 8️⃣ Firebase config
       - run: |
           mkdir -p platforms/android/app
