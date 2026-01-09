@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Repo checkout
+      # 1️⃣ Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Node.js
+      # 2️⃣ Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3️⃣ Java (Android requires)
+      # 3️⃣ Java (ONLY 17)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,15 +31,15 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 5️⃣ NPM dependencies
+      # 5️⃣ Dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform (LOCKED VERSION)
+      # 6️⃣ Add Android platform (stable)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
-      # 7️⃣ 🔥 GOOGLE SERVICES JSON (FROM GITHUB SECRET)
+      # 7️⃣ Firebase config (SECRET)
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -47,11 +47,17 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ Build Debug APK
+      # 8️⃣ FORCE Gradle Wrapper (VERY IMPORTANT)
+      - name: Force Gradle 7.6.4
+        run: |
+          cd platforms/android
+          ./gradlew --version
+
+      # 9️⃣ Build APK
       - name: Build APK
         run: cordova build android --debug
 
-      # 9️⃣ Upload APK as artifact
+      # 🔟 Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
