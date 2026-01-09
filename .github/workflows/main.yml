@@ -14,13 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-    - name: Force Gradle 7.6.4
-    run: |
-      cd platforms/android
-      sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' gradle/wrapper/gradle-wrapper.properties
-
-
-      # 2️⃣ Node
+      # 2️⃣ Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -37,11 +31,11 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 5️⃣ Dependencies
+      # 5️⃣ Project dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform (stable)
+      # 6️⃣ Add Android platform
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
@@ -53,11 +47,11 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ FORCE Gradle Wrapper (VERY IMPORTANT)
+      # 8️⃣ 🔥 FORCE GRADLE 7.6.4 (REAL FIX)
       - name: Force Gradle 7.6.4
         run: |
           cd platforms/android
-          ./gradlew --version
+          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' gradle/wrapper/gradle-wrapper.properties
 
       # 9️⃣ Build APK
       - name: Build APK
