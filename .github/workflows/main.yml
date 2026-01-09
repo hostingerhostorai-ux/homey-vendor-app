@@ -20,14 +20,14 @@ jobs:
         with:
           node-version: 18
 
-      # 3️⃣ Java 17 (Cordova compatible)
-      - name: Setup Java
+      # 3️⃣ Java 17 (MANDATORY)
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ ANDROID SDK + BUILD TOOLS (🔥 MUST BE BEFORE CORDOVA)
+      # 4️⃣ Android SDK + Build Tools
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
@@ -35,19 +35,27 @@ jobs:
           build-tools: 32.0.0
           cmdline-tools: latest
 
-      # 5️⃣ Install Cordova (stable)
+      # 5️⃣ REMOVE SYSTEM GRADLE 9 (🔥 VERY IMPORTANT)
+      - name: Remove system Gradle
+        run: |
+          sudo rm -rf /usr/share/gradle
+          gradle -v || true
+
+      # 6️⃣ Install Cordova
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 6️⃣ Install npm dependencies
+      # 7️⃣ Install npm dependencies
       - name: Install dependencies
         run: npm install
 
-      # 7️⃣ Add Android platform (AFTER SDK READY)
+      # 8️⃣ Add Android Platform (STABLE)
       - name: Add Android Platform
-        run: cordova platform add android@11.0.0
+        run: |
+          cordova platform rm android || true
+          cordova platform add android@12.0.1
 
-      # 8️⃣ Firebase config
+      # 9️⃣ Firebase config
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -55,15 +63,18 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 9️⃣ Prepare Android
-      - name: Prepare Android
-        run: cordova prepare android
+      # 🔟 Force Gradle Wrapper 7.6.4
+      - name: Force Gradle 7.6.4
+        run: |
+          cd platforms/android
+          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' gradle/wrapper/gradle-wrapper.properties
+          ./gradlew --version
 
-      # 🔟 Build Debug APK
+      # 1️⃣1️⃣ Build Debug APK (USES GRADLE WRAPPER)
       - name: Build APK
-        run: cordova build android --debug
+        run: cordova build android --debug --no-interactive
 
-      # 1️⃣1️⃣ Upload APK
+      # 1️⃣2️⃣ Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
