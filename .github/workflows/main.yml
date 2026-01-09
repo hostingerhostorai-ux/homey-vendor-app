@@ -27,17 +27,17 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ Cordova install
+      # 4️⃣ Cordova (stable)
       - name: Install Cordova
-        run: npm install -g cordova
+        run: npm install -g cordova@12
 
       # 5️⃣ NPM dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform (platforms/ auto create hoga)
+      # 6️⃣ Add Android platform (LOCKED VERSION)
       - name: Add Android Platform
-        run: cordova platform add android
+        run: cordova platform add android@11.0.0
 
       # 7️⃣ 🔥 GOOGLE SERVICES JSON (FROM GITHUB SECRET)
       - name: Create google-services.json
@@ -49,7 +49,7 @@ jobs:
 
       # 8️⃣ Build Debug APK
       - name: Build APK
-        run: cordova build android
+        run: cordova build android --debug
 
       # 9️⃣ Upload APK as artifact
       - name: Upload APK
