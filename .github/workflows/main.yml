@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 18
 
-      # 3️⃣ Java (ONLY 17)
+      # 3️⃣ Java 17 (STRICT)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,15 +31,15 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 5️⃣ Project dependencies
+      # 5️⃣ NPM deps
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform
+      # 6️⃣ Android platform (stable)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
-      # 7️⃣ Firebase config (SECRET)
+      # 7️⃣ Firebase config
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -47,11 +47,11 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ 🔥 FORCE GRADLE 7.6.4 (REAL FIX)
-      - name: Force Gradle 7.6.4
+      # 8️⃣ 🔥 GENERATE GRADLE WRAPPER (THIS FIXES EVERYTHING)
+      - name: Generate Gradle 7.6.4 Wrapper
         run: |
           cd platforms/android
-          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' gradle/wrapper/gradle-wrapper.properties
+          gradle wrapper --gradle-version 7.6.4 --distribution-type all
 
       # 9️⃣ Build APK
       - name: Build APK
