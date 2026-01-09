@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 18
 
-      # 3️⃣ Java 17
+      # 3️⃣ Java 17 (ONLY)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,11 +31,11 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 5️⃣ Dependencies
+      # 5️⃣ Project dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6️⃣ Add Android platform
+      # 6️⃣ Add Android platform (STABLE)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
@@ -47,23 +47,16 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 8️⃣ PREPARE ANDROID (VERY IMPORTANT)
+      # 8️⃣ Prepare Android
       - name: Prepare Android
         run: cordova prepare android
 
-      # 9️⃣ FORCE Gradle 7.6.4 (SAFE)
-      - name: Force Gradle 7.6.4
-        run: |
-          cd platforms/android
-          chmod +x gradlew
-          ./gradlew wrapper --gradle-version 7.6.4 --distribution-type all
-          ./gradlew --version
-
-      # 🔟 Build APK
+      # 9️⃣ Build APK (IMPORTANT FLAGS)
       - name: Build APK
-        run: cordova build android --debug --no-interactive
+        run: |
+          cordova build android --debug --no-interactive
 
-      # 1️⃣1️⃣ Upload APK
+      # 🔟 Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
