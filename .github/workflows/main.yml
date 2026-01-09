@@ -39,7 +39,8 @@ jobs:
            # 7️⃣ Android Platform (STABLE)
       - run: |
           cordova platform rm android || true
-          cordova platform add android@11.0.0
+          cordova platform add android@10.1.2
+
 
       # 8️⃣ Prepare Android (REQUIRED)
       - name: Prepare Android
