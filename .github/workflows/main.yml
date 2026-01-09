@@ -41,18 +41,18 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 6️⃣ Project dependencies
+            # 6️⃣ Project dependencies
       - name: Install npm packages
         run: npm install
 
-      # 7️⃣ Android platform (STABLE + FIXED)
+      # 7️⃣ Add Android Platform (STABLE + FIXED)
       - name: Add Android Platform
         run: |
           cordova platform rm android || true
           cordova platform add android@10.1.2
 
-        # 🔒 FORCE Cordova to use compatible Gradle (FINAL FIX)
-           - name: Force Gradle 7.6.4 Wrapper
+      # 🔧 Force Gradle 7.6.4 Wrapper (ONLY FIX)
+      - name: Force Gradle 7.6.4 Wrapper
         run: |
           cd platforms/android
           mkdir -p gradle/wrapper
@@ -63,6 +63,7 @@ jobs:
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dists
           EOF
+
 
 
 
