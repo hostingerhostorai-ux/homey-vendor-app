@@ -52,9 +52,10 @@ jobs:
           cordova platform add android@10.1.2
 
         # 🔒 FORCE Cordova to use compatible Gradle (FINAL FIX)
-      - name: Force Gradle 7.6.4 Wrapper
+           - name: Force Gradle 7.6.4 Wrapper
         run: |
           cd platforms/android
+          mkdir -p gradle/wrapper
           cat > gradle/wrapper/gradle-wrapper.properties <<EOF
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
@@ -62,6 +63,7 @@ jobs:
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dists
           EOF
+
 
 
       # 8️⃣ Firebase config
