@@ -27,7 +27,15 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 4️⃣ Install Gradle 7.6.4 (REQUIRED)
+      # 4️⃣ Setup Android SDK (official)
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 32
+          build-tools: 32.0.0
+          cmdline-tools: latest
+
+      # 5️⃣ Install Gradle 7.6.4 (REQUIRED)
       - name: Install Gradle 7.6.4
         run: |
           wget https://services.gradle.org/distributions/gradle-7.6.4-bin.zip
@@ -36,24 +44,19 @@ jobs:
           echo "/opt/gradle/bin" >> $GITHUB_PATH
           gradle -v
 
-      # 5️⃣ Install Cordova
+      # 6️⃣ Install Cordova
       - name: Install Cordova
         run: npm install -g cordova@12
 
-      # 6️⃣ Install project dependencies
+      # 7️⃣ Install project dependencies
       - name: Install dependencies
         run: npm install
 
-      # 🔹 Install Android SDK Build Tools (BEFORE platform add)
-      - name: Install Android SDK Build Tools
-        run: |
-          yes | sdkmanager "platform-tools" "platforms;android-32" "build-tools;32.0.0"
-
-      # 7️⃣ Add Android Platform (COMPATIBLE)
+      # 8️⃣ Add Android Platform (COMPATIBLE)
       - name: Add Android Platform
         run: cordova platform add android@11.0.0
 
-      # 8️⃣ Firebase config
+      # 9️⃣ Firebase config
       - name: Create google-services.json
         run: |
           mkdir -p platforms/android/app
@@ -61,15 +64,15 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # 9️⃣ Prepare Android
+      # 🔟 Prepare Android
       - name: Prepare Android
         run: cordova prepare android
 
-      # 🔟 Build APK (Gradle 7.6.4)
+      # 1️⃣1️⃣ Build APK (Gradle 7.6.4)
       - name: Build APK
         run: cordova build android --debug --no-interactive
 
-      # 1️⃣1️⃣ Upload APK
+      # 1️⃣2️⃣ Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
